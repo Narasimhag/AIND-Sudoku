@@ -40,26 +40,23 @@ def naked_twins(values):
         the values dictionary with the naked twins eliminated from peers.
     """
 
-    # First select boxes with 2 entries
-    potential_twins = [box for box in values.keys() if len(values[box]) == 2]
+    twins = [box for box in values.keys() if len(values[box]) == 2]
     # Collect boxes that have the same elements
-    naked_twins = [[box1,box2] for box1 in potential_twins \
+    naked_twins = [[box1,box2] for box1 in twins \
                     for box2 in peers[box1] \
                     if set(values[box1])==set(values[box2]) ]
 
-    # For each pair of naked twins,
+
     for i in range(len(naked_twins)):
         box1 = naked_twins[i][0]
         box2 = naked_twins[i][1]
-        # compute intersection of peers
         peers1 = set(peers[box1])
         peers2 = set(peers[box2])
         peers_int = peers1 & peers2
-        # Delete the two digits in naked twins from all common peers.
         for peer_val in peers_int:
             if len(values[peer_val])>2:
-                for rm_val in values[box1]:
-                    values = assign_value(values, peer_val, values[peer_val].replace(rm_val,''))
+                for val in values[box1]:
+                    values = assign_value(values, peer_val, values[peer_val].replace(val,''))
     return values
 
 
@@ -91,7 +88,7 @@ def display(values):
     Args:
         values(dict): The sudoku in dictionary form
     """
-    width = 1+max(len(values[s]) for s in boxes)
+    width = 1+max(len(values[s]) for s in boxes)#type error
     line = '+'.join(['-'*(width*3)]*3)
     for r in rows:
         print(''.join(values[r+c].center(width)+('|' if c in '36' else '')
